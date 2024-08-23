@@ -176,3 +176,152 @@ footer {
     margin-top: 40px;
     font-size: 14px;
 }
+
+
+/* Estilo general del menú */
+nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Ocultar el menú y mostrar el botón "hamburguesa" en pantallas pequeñas */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #ecf0f1;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background-color: #1e1f1f;
+        z-index: 1000;
+        text-align: center;
+    }
+
+    nav ul.show {
+        display: flex;
+    }
+
+    nav li {
+        margin: 10px 0;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+}
+
+
+
+
+
+
+
+
+.add-to-cart-btn {
+    padding: 10px 20px;
+    background-color: #e67e22;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-to-cart-btn:hover {
+    background-color: #d35400;
+    transform: translateY(-2px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.add-to-cart-btn:active {
+    background-color: #c0392b;
+    transform: translateY(0);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+.remove-from-cart-btn {
+    padding: 8px 15px;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+.remove-from-cart-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.remove-from-cart-btn:active {
+    background-color: #a93226;
+    transform: translateY(0);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+footer {
+    background-color: #1e1f1f;
+    color: #ecf0f1;
+    padding: 20px; /* Ajuste de padding uniforme */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    font-size: 14px;
+    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el tamaño total del elemento */
+}
+
+footer .team-section {
+    margin: 0;
+}
+
+footer .team-section h2 {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #e67e22;
+}
+
+footer .team-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+footer .team-section li {
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+footer p {
+    margin: 0;
+}
