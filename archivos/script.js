@@ -32,13 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const cartItemsContainer = document.getElementById("cart-items");
     const cartTotal = document.getElementById("cart-total");
 
-    document.querySelectorAll(".category-btn").forEach(button => {
-        button.addEventListener("click", () => {
-            const category = button.getAttribute("data-category");
-            displayMenuItems(category);
-        });
-    });
-
     function displayMenuItems(category) {
         menuItemsContainer.innerHTML = "";
         menuItems[category].forEach(item => {
@@ -56,6 +49,25 @@ document.addEventListener("DOMContentLoaded", () => {
             menuItemsContainer.appendChild(menuItemDiv);
         });
     }
+
+    document.querySelectorAll(".category-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const category = button.getAttribute("data-category");
+            displayMenuItems(category);
+        });
+    });
+
+    document.getElementById("menu-btn").addEventListener("click", (event) => {
+        event.preventDefault(); // Previene el comportamiento por defecto del enlace
+        displayMenuItems("platos-principales");
+        document.getElementById("platos-principales").scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    document.getElementById('haz-tu-pedido-btn').addEventListener('click', (event) => {
+        event.preventDefault();
+        document.getElementById('cart-items').scrollIntoView({ behavior: 'smooth' });
+    });
+    
 
     function addToCart(item) {
         cart.push(item);
@@ -88,4 +100,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("checkout-btn").addEventListener("click", () => {
         alert("Pedido realizado con éxito!");
     });
+
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navUl = document.querySelector('nav ul');
+
+    menuToggle.addEventListener('click', () => {
+        navUl.classList.toggle('show');
+    });
+    
 });
