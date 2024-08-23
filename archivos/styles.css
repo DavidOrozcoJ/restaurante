@@ -178,14 +178,14 @@ footer {
 }
 
 
-/* Estilo general del menú */
+
 nav ul {
     display: flex;
     justify-content: center;
     gap: 20px;
 }
 
-/* Ocultar el menú y mostrar el botón "hamburguesa" en pantallas pequeñas */
+
 .menu-toggle {
     display: none;
     background: none;
@@ -292,13 +292,13 @@ nav ul {
 footer {
     background-color: #1e1f1f;
     color: #ecf0f1;
-    padding: 20px; /* Ajuste de padding uniforme */
+    padding: 20px; 
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 40px;
     font-size: 14px;
-    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el tamaño total del elemento */
+    box-sizing: border-box; 
 }
 
 footer .team-section {
