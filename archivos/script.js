@@ -1,20 +1,29 @@
 document.addEventListener("DOMContentLoaded", () => {
     const menuItems = {
         entradas: [
-            { name: "Ensalada César", price: 5.99 },
-            { name: "Sopa de Tomate", price: 4.99 },
+            { name: "Ensalada César", price: 5.99, image: "/imagenes/Pizza/ensalada cesar.png" },
+            { name: "Sopa de Tomate", price: 4.99, image: "/imagenes/Pizza/Sopa de tomate.png" },
         ],
         "platos-principales": [
-            { name: "Pasta Alfredo", price: 12.99 },
-            { name: "Bistec", price: 15.99 },
+            { name: "BBQ y Tocineta", price: 14.99, image: "/imagenes/Pizza/Bacon & BBQ.png" },
+            { name: "Pollo y Piña", price: 15.99, image: "/imagenes/Pizza/chiken & pineapple.png" },
+            { name: "Salchicha y Tocineta", price: 16.99, image: "/imagenes/Pizza/Bacon & sausage.png" },
+            { name: "Jamon y cangrejo", price: 16.99, image: "/imagenes/Pizza/Ham and Crab stick.png" },
+            { name: "Hawaiana", price: 15.99, image: "/imagenes/Pizza/Hawaiian.png" },
+            { name: "Margarita", price: 13.99, image: "/imagenes/Pizza/magherita.png" },
+            { name: "Pepperoni", price: 13.99, image: "/imagenes/Pizza/Pepporoni.png" },
+            { name: "Puerco deluxe", price: 18.99, image: "/imagenes/Pizza/Pork deluxe.png" },
+            { name: "Marina", price: 19.99, image: "/imagenes/Pizza/Super Seafood.png" },
+            { name: "Vegana", price: 20.99, image: "/imagenes/Pizza/Veggie.png" },
+            { name: "Coreana", price: 17.99, image: "/imagenes/Pizza/Tom Yung goon.png" },
         ],
         bebidas: [
-            { name: "Coca-Cola", price: 1.99 },
-            { name: "Agua Mineral", price: 1.49 },
+            { name: "Coca-Cola", price: 1.99, image: "/imagenes/Pizza/coca.png" },
+            { name: "Agua Mineral", price: 1.49, image: "/imagenes/Pizza/agua.png" },
         ],
         postres: [
-            { name: "Cheesecake", price: 3.99 },
-            { name: "Brownie", price: 3.49 },
+            { name: "Cheesecake", price: 3.99, image: "/imagenes/Pizza/cheesecake.png" },
+            { name: "Brownie", price: 3.49, image: "/imagenes/Pizza/brownie.png" },
         ]
     };
 
@@ -36,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const menuItemDiv = document.createElement("div");
             menuItemDiv.classList.add("menu-item");
             menuItemDiv.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
                 <h3>${item.name}</h3>
                 <p>Precio: $${item.price.toFixed(2)}</p>
                 <button class="add-to-cart-btn">Agregar al Carrito</button>
@@ -77,7 +87,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("checkout-btn").addEventListener("click", () => {
         alert("Pedido realizado con éxito!");
-        // Aquí puedes enviar el pedido a un servidor si fuera necesario.
     });
 });
-
