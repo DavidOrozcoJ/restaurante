@@ -1,111 +1,190 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const menuItems = {
-        entradas: [
-            { name: "Ensalada César", price: 5.99, image: "/imagenes/Pizza/ensalada cesar.png" },
-            { name: "Sopa de Tomate", price: 4.99, image: "/imagenes/Pizza/Sopa de tomate.png" },
-        ],
-        "platos-principales": [
-            { name: "BBQ y Tocineta", price: 14.99, image: "/imagenes/Pizza/Bacon & BBQ.png" },
-            { name: "Pollo y Piña", price: 15.99, image: "/imagenes/Pizza/chiken & pineapple.png" },
-            { name: "Salchicha y Tocineta", price: 16.99, image: "/imagenes/Pizza/Bacon & sausage.png" },
-            { name: "Jamon y cangrejo", price: 16.99, image: "/imagenes/Pizza/Ham and Crab stick.png" },
-            { name: "Hawaiana", price: 15.99, image: "/imagenes/Pizza/Hawaiian.png" },
-            { name: "Margarita", price: 13.99, image: "/imagenes/Pizza/magherita.png" },
-            { name: "Pepperoni", price: 13.99, image: "/imagenes/Pizza/Pepporoni.png" },
-            { name: "Puerco deluxe", price: 18.99, image: "/imagenes/Pizza/Pork deluxe.png" },
-            { name: "Marina", price: 19.99, image: "/imagenes/Pizza/Super Seafood.png" },
-            { name: "Vegana", price: 20.99, image: "/imagenes/Pizza/Veggie.png" },
-            { name: "Coreana", price: 17.99, image: "/imagenes/Pizza/Tom Yung goon.png" },
-        ],
-        bebidas: [
-            { name: "Coca-Cola", price: 1.99, image: "/imagenes/Pizza/coca.png" },
-            { name: "Agua Mineral", price: 1.49, image: "/imagenes/Pizza/agua.png" },
-        ],
-        postres: [
-            { name: "Cheesecake", price: 3.99, image: "/imagenes/Pizza/cheesecake.png" },
-            { name: "Brownie", price: 3.49, image: "/imagenes/Pizza/brownie.png" },
-        ]
-    };
-
-    const cart = [];
     const menuItemsContainer = document.getElementById("menu-items");
     const cartItemsContainer = document.getElementById("cart-items");
     const cartTotal = document.getElementById("cart-total");
+    const checkoutBtn = document.getElementById("checkout-btn");
+    let cart = [];
 
-    function displayMenuItems(category) {
-        menuItemsContainer.innerHTML = "";
-        menuItems[category].forEach(item => {
-            const menuItemDiv = document.createElement("div");
-            menuItemDiv.classList.add("menu-item");
-            menuItemDiv.innerHTML = `
-                <img src="${item.image}" alt="${item.name}">
-                <h3>${item.name}</h3>
-                <p>Precio: $${item.price.toFixed(2)}</p>
-                <button class="add-to-cart-btn">Agregar al Carrito</button>
-            `;
-            menuItemDiv.querySelector(".add-to-cart-btn").addEventListener("click", () => {
-                addToCart(item);
-            });
-            menuItemsContainer.appendChild(menuItemDiv);
-        });
+    // URL de la API de Google Sheets
+    const apiURL = 'https://script.google.com/macros/s/AKfycbwFpvkvT3Mah5n6a8r5-i_kNvF2YgIAhNuUJyhZGkNHAYlh4tE1pE7avvAveIlMH25L6g/exec';
+
+    // Función para cargar productos desde Google Sheets
+    function loadMenuItems(category = 'platos-principales') {  
+        // Realizar la solicitud GET a la API
+        fetch(apiURL)
+            .then(response => response.json()) // Parsear la respuesta a formato JSON
+            .then(data => {
+                const menuItems = data.data; // Obtener los productos del JSON
+                displayMenuItems(menuItems, category); // Mostrar productos por categoría
+            })
+            .catch(error => console.error('Error al cargar los productos:', error)); // Manejo de errores
     }
 
-    document.querySelectorAll(".category-btn").forEach(button => {
-        button.addEventListener("click", () => {
-            const category = button.getAttribute("data-category");
-            displayMenuItems(category);
+    // Función para mostrar productos filtrados por categoría
+    function displayMenuItems(menuItems, category) {
+        menuItemsContainer.innerHTML = "";  // Limpiar el contenedor de productos
+        let filteredItems = menuItems.filter(item => item.category === category);  // Filtrar por categoría
+
+        if (filteredItems.length === 0) {
+            // Si no hay productos en la categoría seleccionada, mostrar un mensaje
+            menuItemsContainer.innerHTML = "<p>No hay productos disponibles en esta categoría.</p>";
+        } else {
+            // Si hay productos, los mostramos uno por uno
+            filteredItems.forEach(item => {
+                const menuItemDiv = document.createElement("div");
+                menuItemDiv.classList.add("menu-item");
+                menuItemDiv.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <h3>${item.name}</h3>
+                    <p>${item.description}</p>
+                    <p>Precio: $${parseFloat(item.price).toFixed(2)}</p>
+                    <button class="add-to-cart-btn">Agregar al Carrito</button>
+                `;
+                // Agregar evento para añadir el producto al carrito
+                menuItemDiv.querySelector(".add-to-cart-btn").addEventListener("click", () => {
+                    addToCart(item); // Llamar a la función para añadir el producto al carrito
+                });
+                menuItemsContainer.appendChild(menuItemDiv); // Añadir el producto al contenedor de productos
+            });
+        }
+    }
+
+    // Función para agregar productos al carrito
+    function addToCart(item) {
+        // Verificar si el producto ya está en el carrito
+        let found = false;
+        cart.forEach(cartItem => {
+            if (cartItem.name === item.name) {
+                // Si el producto ya está en el carrito, aumentar su cantidad
+                cartItem.quantity += 1;
+                found = true;
+            }
+        });
+
+        // Si el producto no está en el carrito, lo añadimos con cantidad = 1
+        if (!found) {
+            item.quantity = 1;
+            cart.push(item);
+        }
+
+        updateCart(); // Actualizar la visualización del carrito
+    }
+
+    // Función para eliminar productos del carrito
+    function removeFromCart(index) {
+        // Eliminar el producto seleccionado del carrito
+        cart.splice(index, 1);
+        updateCart(); // Actualizar el carrito después de eliminar
+    }
+
+    // Función para actualizar el carrito visualmente
+    function updateCart() {
+        cartItemsContainer.innerHTML = "";  // Limpiar el contenedor del carrito
+        let total = 0;
+
+        if (cart.length === 0) {
+            // Si el carrito está vacío, mostramos un mensaje
+            cartItemsContainer.innerHTML = "<p>El carrito está vacío.</p>";
+        } else {
+            // Si hay productos en el carrito, los mostramos con su cantidad
+            cart.forEach((item, index) => {
+                const cartItemDiv = document.createElement("div");
+                cartItemDiv.classList.add("cart-item");
+                let itemTotal = item.price * item.quantity; // Calcular el total por producto
+                total += itemTotal; // Sumar al total general del carrito
+                cartItemDiv.innerHTML = `
+                    <p>${item.name} x${item.quantity} - $${itemTotal.toFixed(2)}</p>
+                    <button class="remove-from-cart-btn">Eliminar</button>
+                `;
+                // Agregar evento para eliminar el producto del carrito
+                cartItemDiv.querySelector(".remove-from-cart-btn").addEventListener("click", () => {
+                    removeFromCart(index);
+                });
+                cartItemsContainer.appendChild(cartItemDiv); // Añadir el producto al contenedor del carrito
+            });
+        }
+        // Actualizar el total del carrito
+        cartTotal.textContent = total.toFixed(2);
+    }
+
+    // Evento para capturar los datos del formulario y el carrito al hacer clic en "Realizar Pedido"
+    checkoutBtn.addEventListener("click", (event) => {
+        event.preventDefault(); // Prevenir el comportamiento predeterminado del botón
+
+        // Capturar los datos del cliente desde el formulario
+        const customerName = document.getElementById("name").value;
+        const customerPhone = document.getElementById("phone").value;
+        const customerAddress = document.getElementById("address").value;
+
+        // Verificar que los campos de datos del cliente no estén vacíos y que haya productos en el carrito
+        if (!customerName || !customerPhone || !customerAddress || cart.length === 0) {
+            alert("Por favor, completa todos los campos y añade productos al carrito.");
+            return;
+        }
+
+        // Preparar los datos del pedido en formato JSON
+        const orderData = {
+            customer: {
+                name: customerName,
+                phone: customerPhone,
+                address: customerAddress
+            },
+            items: cart.map(item => ({
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity
+            })),
+            total: parseFloat(cartTotal.textContent)
+        };
+
+        // Enviar los datos del pedido mediante POST a la misma URL
+        fetch(apiURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData), // Enviar el pedido en formato JSON
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Pedido realizado:', data);
+            alert("Pedido realizado con éxito.");
+            cart = [];  // Limpiar el carrito
+            updateCart();  // Actualizar el carrito vacío
+        })
+        .catch((error) => {
+            console.error('Error al realizar el pedido:', error);
         });
     });
 
-    document.getElementById("menu-btn").addEventListener("click", (event) => {
-        event.preventDefault(); // Previene el comportamiento por defecto del enlace
-        displayMenuItems("platos-principales");
-        document.getElementById("platos-principales").scrollIntoView({ behavior: 'smooth' });
-    });
-    
+    // Evento para ir al carrito cuando se hace clic en "HAZ TU PEDIDO"
     document.getElementById('haz-tu-pedido-btn').addEventListener('click', (event) => {
         event.preventDefault();
         document.getElementById('cart-items').scrollIntoView({ behavior: 'smooth' });
     });
-    
 
-    function addToCart(item) {
-        cart.push(item);
-        updateCart();
-    }
-
-    function removeFromCart(index) {
-        cart.splice(index, 1);
-        updateCart();
-    }
-
-    function updateCart() {
-        cartItemsContainer.innerHTML = "";
-        cart.forEach((item, index) => {
-            const cartItemDiv = document.createElement("div");
-            cartItemDiv.classList.add("cart-item");
-            cartItemDiv.innerHTML = `
-                <p>${item.name} - $${item.price.toFixed(2)}</p>
-                <button class="remove-from-cart-btn">Eliminar</button>
-            `;
-            cartItemDiv.querySelector(".remove-from-cart-btn").addEventListener("click", () => {
-                removeFromCart(index);
-            });
-            cartItemsContainer.appendChild(cartItemDiv);
-        });
-        const total = cart.reduce((sum, item) => sum + item.price, 0);
-        cartTotal.textContent = total.toFixed(2);
-    }
-
-    document.getElementById("checkout-btn").addEventListener("click", () => {
-        alert("Pedido realizado con éxito!");
+    // Evento para mostrar el menú de platos principales
+    document.getElementById('menu-btn').addEventListener('click', (event) => {
+        event.preventDefault();
+        loadMenuItems('platos-principales');  // Mostrar los platos principales
+        document.getElementById('platos-principales').scrollIntoView({ behavior: 'smooth' });
     });
 
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navUl = document.querySelector('nav ul');
-
-    menuToggle.addEventListener('click', () => {
-        navUl.classList.toggle('show');
+    // Cargar los productos cuando se selecciona una categoría
+    document.getElementById('entradas-btn').addEventListener('click', () => {
+        loadMenuItems('entradas');  // Mostrar entradas
     });
-    
+    document.getElementById('platos-principales-btn').addEventListener('click', () => {
+        loadMenuItems('platos-principales');  // Mostrar platos principales
+    });
+    document.getElementById('bebidas-btn').addEventListener('click', () => {
+        loadMenuItems('bebidas');  // Mostrar bebidas
+    });
+    document.getElementById('postres-btn').addEventListener('click', () => {
+        loadMenuItems('postres');  // Mostrar postres
+    });
+
+    // Cargar productos por defecto al iniciar la página (platos principales)
+    loadMenuItems();
 });

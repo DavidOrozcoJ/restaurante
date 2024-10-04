@@ -62,6 +62,23 @@
             <div class="cart-total">
                 <p>Total: $<span id="cart-total">0.00</span></p>
             </div>
+
+            <!-- Aquí agregamos el formulario para capturar los datos del cliente -->
+            <div class="customer-info">
+                <h3>Datos del Cliente</h3>
+                <form id="customer-form">
+                    <label for="name">Nombre:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="phone">Teléfono:</label>
+                    <input type="tel" id="phone" name="phone" required>
+
+                    <label for="address">Dirección:</label>
+                    <input type="text" id="address" name="address" required>
+                </form>
+            </div>
+            
+            <!-- Botón para realizar el pedido -->
             <button id="checkout-btn">Realizar Pedido</button>
         </section>
         
