@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Pergola - Gestión de Pedidos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="/imagenes/Pizza/logo.png" alt="La Pergola Logo">
+        </div>
+        <nav>
+            <button class="menu-toggle" aria-label="Abrir menú">☰</button>
+            <ul>
+                <li><a href="#" id="haz-tu-pedido-btn">HAZ TU PEDIDO</a></li>
+                <li><a href="#platos-principales" id="menu-btn">MENÚ</a></li>
+                <li><a href="#" id="login-btn">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Sección de Menú -->
+        <section class="menu-section">
+            <h2>Categorías del Menú</h2>
+            <div class="menu-categories">
+                <button class="category-btn" data-category="entradas">Entradas</button>
+                <button class="category-btn" data-category="platosPrincipales">Platos Principales</button>
+                <button class="category-btn" data-category="bebidas">Bebidas</button>
+                <button class="category-btn" data-category="postres">Postres</button>
+            </div>
+            <div class="menu-items" id="menu-items"></div>
+        </section>
+
+        <!-- Sección de Carrito -->
+        <section class="cart-section">
+            <h2>Tu Carrito</h2>
+            <div id="cart-items"></div>
+            <div class="cart-total">
+                <p>Total: $<span id="cart-total">0.00</span></p>
+            </div>
+            <form id="order-form" action="/procesar-pedido" method="POST">
+                <input type="hidden" id="cart-data" name="cartData">
+                <button type="submit" id="checkout-btn">Realizar Pedido</button>
+            </form>
+        </section>
+
+        <!-- Sección de Gestión de Pedidos (Admin) -->
+        <section id="admin-section" style="display:none;">
+            <h2>Gestión de Pedidos</h2>
+            <div id="orders-list"></div>
+        </section>
+
+        <!-- Sección de Login -->
+        <section id="login-section" style="display:none;">
+            <h2>Iniciar Sesión</h2>
+            <input type="text" id="username" placeholder="Usuario">
+            <input type="password" id="password" placeholder="Contraseña">
+            <button id="submit-login-btn">Ingresar</button>
+        </section>
+    </main>
+
+    <footer>
+        <section class="team-section">
+            <h2>Equipo Desarrollador</h2>
+            <ul>
+                <li>David Orozco</li>
+                <li>Anthony Nope</li>
+                <li>Gabriel Gonzalez</li>
+            </ul>
+        </section>
+        <p>&copy; 1979 La Pergola. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Simulación de datos del carrito y envío del formulario
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const cartDataInput = document.getElementById('cart-data');
+
+        checkoutBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Evitar el envío por defecto del formulario
+
+            // Simular datos del carrito
+            const cartData = [
+                { item: 'Pizza Margarita', quantity: 2, price: 12.00 },
+                { item: 'Coca-Cola', quantity: 1, price: 2.50 }
+            ];
+
+            // Convertir datos del carrito a formato JSON
+            cartDataInput.value = JSON.stringify(cartData);
+
+            // Enviar el formulario
+            document.getElementById('order-form').submit();
+        });
+    </script>
+</body>
+</html>
