@@ -29,5 +29,7 @@ RUN a2enmod rewrite
 # Exponer el puerto 80
 EXPOSE 80
 
+RUN php artisan migrate --force
+
 # Comando por defecto al iniciar el contenedor
 CMD ["apache2-foreground"]
