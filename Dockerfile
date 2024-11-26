@@ -14,15 +14,20 @@ RUN apt-get update && apt-get install -y \
 # Instalar Composer
 COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 
-# Copiar los archivos del proyecto a la imagen Docker
+# Configurar la carpeta raíz de Apache para que apunte a "public"
+WORKDIR /var/www/html
 COPY . /var/www/html
-
-# Configurar permisos para Laravel
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
-# Exponer el puerto 80 para tráfico web
+# Configurar Apache para servir el directorio "public"
+RUN echo "DocumentRoot /var/www/html/public" >> /etc/apache2/sites-available/000-default.conf
+
+# Habilitar el módulo de reescritura de Apache
+RUN a2enmod rewrite
+
+# Exponer el puerto 80
 EXPOSE 80
 
 # Comando por defecto al iniciar el contenedor
