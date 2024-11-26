@@ -17,9 +17,8 @@ COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 # Configurar la carpeta raíz de Apache para que apunte a "public"
 WORKDIR /var/www/html
 COPY . /var/www/html
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
+RUN echo "DocumentRoot /var/www/html/public" >> /etc/apache2/sites-available/000-default.conf
+RUN a2enmod rewrite
 
 # Configurar Apache para servir el directorio "public"
 RUN echo "DocumentRoot /var/www/html/public" >> /etc/apache2/sites-available/000-default.conf
